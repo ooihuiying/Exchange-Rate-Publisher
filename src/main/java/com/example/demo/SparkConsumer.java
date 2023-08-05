@@ -34,10 +34,11 @@ public class SparkConsumer {
     @PostConstruct
     private void consumeFromKafkaTopic() throws InterruptedException {
         SparkConf sparkConf = new SparkConf().setAppName("KafkaSparkConsumer")
-                // .setMaster("spark://spark:7077");
-                .setMaster("local[*]");
+                // .setMaster("spark://spark:7077"); // Set this if we want to use Spark in Cluster mode
+                .setMaster("local[*]"); // Set this if we want to use Local Spark ... need to modify docker accordingly..currently docker is configured to expect local spark
         JavaStreamingContext streamingContext = new JavaStreamingContext(sparkConf, Durations.seconds(5));
         Map<String, Object> kafkaParams = new HashMap<>();
+
         kafkaParams.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
         kafkaParams.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         kafkaParams.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -52,7 +53,6 @@ public class SparkConsumer {
 
 
         final AtomicReference<List<String>> allValues = new AtomicReference<>(new ArrayList<>());
-
         // Process each Kafka record's value and send to websocket
         stream.foreachRDD(rdd -> {
             List<String> batchValues = rdd.map(record -> {

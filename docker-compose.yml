@@ -31,7 +31,9 @@ services:
     ports:
       - "4040:4040"
     environment:
-      SPARK_MASTER_URL: spark://spark:7077
-      SPARK_JAVA_OPTS: --add-exports java.base/sun.nio.ch=ALL-UNNAMED
+        SPARK_MASTER_URL: spark://spark:7077
+        SPARK_WORKER_CORES: 4      # Increase the number of cores
+        SPARK_WORKER_MEMORY: 4g   # Increase the amount of memory
+        SPARK_MASTER_WEBUI_PORT: 4040 # To view Spark UI
     depends_on:
       - kafka
