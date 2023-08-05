@@ -23,6 +23,7 @@
 - Now, using IDE or running gradle commands, run the project DemoApplication wth Java 11 version.
 - Open browser `http://localhost:8080/historicalExchange`. This endpoint will publish messages to Kafka. 
 - See the messages printed in the third terminal to verify message is published properly.
+- Alternatively, just go to localhost:8080/ to see the UI
 
 ## Helpful debug tips
 - If Kafka has issues, just kill it by `lsof -i :9092` to get get the pid and then `kill -9 <PID>`
