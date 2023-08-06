@@ -8,6 +8,16 @@
 ### Prerequisite
 - Use Java 11. Don't use Java 17 because I faced some problems with Spark.....
 
+### Some explanation of the code
+- Controller: contains endpoints for clients to interact with the app.
+- ExchangeRateCsvParser: Contains logic to read from CSV file. Implement sleep to simulate real-life data processing and event arrivals.
+- KafkaProducer: Contains code to produce messages to queue. Each Currency type has a Topic.
+- MessageHandler: Used to communicate with Websocket in the UI.
+- SparkConsumer: Contains code to read from Kafka. Uses a library to connect both tools. Emits data to Websocket in the UI.
+- Index.html and App.js: Frontend code.
+- [Video Explanation](https://drive.google.com/file/d/1kty7pBQ__d_nN9nf3bDvBNNNEgELWqsA/view?usp=sharing)
+- ![Screenshot 2023-08-06 at 3.06.00 PM.png](..%2F..%2FScreenshot%202023-08-06%20at%203.06.00%20PM.png)
+
 ### To run with docker image
 - In `application.properties`, set `spring.kafka.bootstrap-servers=kafka:9092`
 - `sudo service docker start` use this command if you are on linux. If you are on MacOs, just start the Docker desktop.
