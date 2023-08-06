@@ -71,8 +71,6 @@ public class SparkConsumer {
             }));
         });
 
-
-
         streamingContext.start();
 
         // Register a shutdown hook to stop the streaming context when the application is closing

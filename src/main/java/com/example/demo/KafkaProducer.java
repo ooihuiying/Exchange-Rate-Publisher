@@ -17,7 +17,6 @@ public class KafkaProducer implements DisposableBean {
 
     private final String kafkaBootstrapServers;
 
-    // TODO: Make this a bean
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final org.apache.kafka.clients.producer.KafkaProducer<String, String> kafkaProducer;
