@@ -16,13 +16,15 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class SparkConsumer {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaBootstrapServers;
+
+    @Value("${spark.master.config}")
+    private String sparkMasterConfig;
 
     private MessageHandler messageHandler;
 
@@ -34,8 +36,7 @@ public class SparkConsumer {
     @PostConstruct
     private void consumeFromKafkaTopic() throws InterruptedException {
         SparkConf sparkConf = new SparkConf().setAppName("KafkaSparkConsumer")
-                // .setMaster("spark://spark:7077"); // Set this if we want to use Spark in Cluster mode
-                .setMaster("local[*]"); // Set this if we want to use Local Spark ... need to modify docker accordingly..currently docker is configured to expect local spark
+                .setMaster(sparkMasterConfig);
         JavaStreamingContext streamingContext = new JavaStreamingContext(sparkConf, Durations.seconds(5));
         Map<String, Object> kafkaParams = new HashMap<>();
 
@@ -50,9 +51,6 @@ public class SparkConsumer {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.<String, String>Subscribe(Collections.singleton("exchange-rates"), kafkaParams)
                 );
-
-
-        final AtomicReference<List<String>> allValues = new AtomicReference<>(new ArrayList<>());
         // Process each Kafka record's value and send to websocket
         stream.foreachRDD(rdd -> {
             List<String> batchValues = rdd.map(record -> {

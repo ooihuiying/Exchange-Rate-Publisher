@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,9 @@ import java.util.Map;
 // https://docs.openexchangerates.org/reference/latest-json
 @RestController
 public class Controller {
-    String APP_ID = "904e5bf25a2e4c19b51221173587d755"; // APP ID not working anymore
-    private final String apiUrl = "https://openexchangerates.org/api/latest.json";
+
+    @Value("${openexchangerates.api}")
+    private String APP_ID;
 
     private final String historicalApiUrl = "https://openexchangerates.org/api/historical/";
     private RestTemplate restTemplate;
@@ -39,7 +41,7 @@ public class Controller {
 
     @GetMapping("/exchange")
     public Double getExchange() {
-        String url = apiUrl + "?app_id=" + APP_ID;
+        String url = "https://openexchangerates.org/api/latest.json" + "?app_id=" + APP_ID;
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
         Map<String, Double> rates = (Map<String, Double>) response.getBody().get("rates");
