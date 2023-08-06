@@ -20,7 +20,7 @@ public class ExchangeRateCsvParser {
     }
 
     public void parseCsv(String currencyFilter) {
-        int WAIT_AFTER_ROWS = 100;
+        int WAIT_AFTER_ROWS = 200;
         if (currencyFilter.isEmpty()) return;
         String csvFilePath = "exchange_rates.csv"; // Replace with the actual file path
 

@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Hello WebSocket</title>
+    <head>
+        <title>Hello WebSocket</title>
+    </head>
+    <body>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.js" integrity="sha512-lyIq9fRcCeSCXhp41XC/250UBmypAHV8KW+AhLcSEIksWHBfhzub6XXwDe67wTpOG8zrO2NAU/TYmEaCW+aQSg==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous"></script>
+        <script src="/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-</head>
-<body>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.js" integrity="sha512-lyIq9fRcCeSCXhp41XC/250UBmypAHV8KW+AhLcSEIksWHBfhzub6XXwDe67wTpOG8zrO2NAU/TYmEaCW+aQSg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous"></script>
-    <script src="/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+            enabled. Please enable
+            Javascript and reload this page!</h2>
+        </noscript>
 
-    <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-        enabled. Please enable
-        Javascript and reload this page!</h2>
-    </noscript>
-
-    <div id="main-content" class="container">
-        <canvas id="exchangeRateChart" width="400" height="200"></canvas>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="conversation" class="table table-striped">
-                    <thead>
-                    <div class="form-group">
-                        <label>Exchange Rate With WebSocket</label>
-                        <input oninput="updateButtonStatus()" type="text" id="currency" class="form-control" placeholder="Type Currency here (eg, AUD)...">
-                        <button onclick="sendMessage()" id="connect" class="btn btn-default" type="submit" disabled>Connect</button>
-                    </div>
-                    </thead>
-                    <tbody id="rates">
-                    </tbody>
-                </table>
+        <div id="main-content" class="container">
+            <br/>
+            <canvas id="exchangeRateChart" width="400" height="200"></canvas>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="conversation" class="table table-striped">
+                        <thead>
+                        <div class="form-group">
+                            <label>Exchange Rate With WebSocket</label>
+                            <input oninput="updateButtonStatus()" type="text" id="currency" class="form-control" placeholder="Type Currency here (eg, AUD)...">
+                            <button onclick="sendMessage()" id="connect" class="btn btn-default" type="submit" disabled>Connect</button>
+                        </div>
+                        </thead>
+                        <tbody id="rates">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
