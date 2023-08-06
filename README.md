@@ -16,7 +16,11 @@
 - SparkConsumer: Contains code to read from Kafka. Uses a library to connect both tools. Emits data to Websocket in the UI.
 - Index.html and App.js: Frontend code.
 - [Video Explanation](https://drive.google.com/file/d/1kty7pBQ__d_nN9nf3bDvBNNNEgELWqsA/view?usp=sharing)
-- ![Screenshot 2023-08-06 at 3.06.00 PM.png](..%2F..%2FScreenshot%202023-08-06%20at%203.06.00%20PM.png)
+
+  
+![Preview](https://github.com/ooihuiying/Exchange-Rate-Publisher/assets/40648338/0c4d35fe-bb80-472c-a174-3057525f87b4)
+
+
 
 ### To run with docker image
 - In `application.properties`, set `spring.kafka.bootstrap-servers=kafka:9092`
