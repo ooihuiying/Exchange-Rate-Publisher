@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.Models.ExchangeRateInfo;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Service
 public class SparkConsumer {
@@ -45,22 +47,31 @@ public class SparkConsumer {
         kafkaParams.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         kafkaParams.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group");
 
+        // Subscribe to a pattern of topics using a regular expression
+        Pattern topicPattern = Pattern.compile(".*"); // Match all topics
         JavaInputDStream<ConsumerRecord<String, String>> stream =
                 KafkaUtils.createDirectStream(
                         streamingContext,
                         LocationStrategies.PreferConsistent(),
-                        ConsumerStrategies.<String, String>Subscribe(Collections.singleton("exchange-rates"), kafkaParams)
+                        ConsumerStrategies.<String, String>SubscribePattern(topicPattern, kafkaParams)
                 );
+
         // Process each Kafka record's value and send to websocket
         stream.foreachRDD(rdd -> {
-            List<String> batchValues = rdd.map(record -> {
+            List<ExchangeRateInfo> batchValues = rdd.map(record -> {
+                String topic = record.topic(); // Get the topic name
                 String value = record.value();
-                System.out.println("Received exchange rate: " + value);
-                return value;
+                System.out.println("Received exchange rate for topic " + topic + ": " + value);
+                return ExchangeRateInfo.builder().topic(topic).value(value).build();
             }).collect();
+
             System.out.println("Batch size: " + batchValues.size()); // Debug line
-            batchValues.forEach(messageHandler::sendMessage);
+            batchValues.forEach((exchangeRateInfo -> {
+                messageHandler.sendMessage(exchangeRateInfo.getTopic(), exchangeRateInfo.getValue());
+            }));
         });
+
+
 
         streamingContext.start();
 

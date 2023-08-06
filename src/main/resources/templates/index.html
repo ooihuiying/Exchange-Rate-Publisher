@@ -17,9 +17,11 @@
         <div class="col-md-12">
             <table id="conversation" class="table table-striped">
                 <thead>
-                <tr>
-                    <th>Exchange Rate With WebSocket</th>
-                </tr>
+                <div class="form-group">
+                    <label>Exchange Rate With WebSocket</label>
+                    <input oninput="updateButtonStatus()" type="text" id="currency" class="form-control" placeholder="Type Currency here (eg, AUD)...">
+                    <button onclick="sendMessage()" id="connect" class="btn btn-default" type="submit" disabled>Connect</button>
+                </div>
                 </thead>
                 <tbody id="rates">
                 </tbody>

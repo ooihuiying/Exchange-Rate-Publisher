@@ -1,8 +1,9 @@
 ## What is this
-- Get exchange rate from source: https://app.dataforseo.com/api-detail/serp
-- Publish exchange rate to Kafka topic
-- Consume from Spark and do processing
-- Display result in UI (index.html)
+- When this API is started, user will need to go to the UI(index.html) and input the currency type, eg, AUD
+- This will trigger a read of a CSV file: https://www.kaggle.com/datasets/ruchi798/currency-exchange-rates
+- Relevant currency data to the input will be published to a Kafka topic. Eg, if user selected AUD currency, the data will be published to AUD topic
+- There is a listening Spark consumer (currently run in local mode) which will continually listen for all Kafka topics and then publish to a Websocket topic
+- Results will be displayed in the UI
 
 ### Prerequisite
 - Use Java 11. Don't use Java 17 because I faced some problems with Spark.....

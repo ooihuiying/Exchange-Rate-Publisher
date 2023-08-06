@@ -1,21 +1,30 @@
 package com.example.demo;
 
+import com.example.demo.Models.CsvRow;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Properties;
 
 @Service
-public class KafkaProducer {
+public class KafkaProducer implements DisposableBean {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String kafkaBootstrapServers;
+    private final String kafkaBootstrapServers;
 
-    public void sendExchangeRates(List<Double> exchangeRates) {
+    // TODO: Make this a bean
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final org.apache.kafka.clients.producer.KafkaProducer<String, String> kafkaProducer;
+
+    @Autowired
+    public KafkaProducer (@Value("${spring.kafka.bootstrap-servers}") String kafkaBootstrapServers) {
+        this.kafkaBootstrapServers = kafkaBootstrapServers;
 
         // Create producer properties
         Properties properties = new Properties();
@@ -24,13 +33,17 @@ public class KafkaProducer {
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         // Create a Kafka producer
-        org.apache.kafka.clients.producer.KafkaProducer<String, String> producer = new org.apache.kafka.clients.producer.KafkaProducer<>(properties);
-        for (Double rate : exchangeRates) {
-            String rateString = String.valueOf(rate);
-            ProducerRecord<String, String> record = new ProducerRecord<>("exchange-rates", rateString, rateString);
-            producer.send(record);
-        }
+        this.kafkaProducer = new org.apache.kafka.clients.producer.KafkaProducer<>(properties);
+    }
+    public void sendExchangeRate(CsvRow row) throws JsonProcessingException {
+        String json = objectMapper.writeValueAsString(row);
+        // currency is the Kafka Topic
+        ProducerRecord<String, String> record = new ProducerRecord<>(row.getCurrency(), json, json);
+        this.kafkaProducer.send(record);
+    }
 
-        producer.close();
+    @Override
+    public void destroy() throws Exception {
+        this.kafkaProducer.close();
     }
 }
